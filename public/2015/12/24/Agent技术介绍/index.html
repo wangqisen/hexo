@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Agent技术介绍 | wangqisen&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近因为课程的关系，开始接触到Agent技术，翻译过来就是智能体技术。这个概念其实是想要把计算机硬件相关的部分通过抽象隐藏起来，将各个计算资源抽象为所谓的智能体。Agent不仅仅只是具有各种行为特征，来完成各种任务。而且可以在不同的网络节点进行迁移，以完成所需要的需求。参考官方文档，做了一个售书系统的demo，其中，卖家通过向经理询问来查找当前的卖家，然后与所有卖家进行沟通，选择价格最低的卖家进行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent技术介绍">
+<meta property="og:url" content="http://yoursite.com/2015/12/24/Agent技术介绍/index.html">
+<meta property="og:site_name" content="wangqisen's blog">
+<meta property="og:description" content="最近因为课程的关系，开始接触到Agent技术，翻译过来就是智能体技术。这个概念其实是想要把计算机硬件相关的部分通过抽象隐藏起来，将各个计算资源抽象为所谓的智能体。Agent不仅仅只是具有各种行为特征，来完成各种任务。而且可以在不同的网络节点进行迁移，以完成所需要的需求。参考官方文档，做了一个售书系统的demo，其中，卖家通过向经理询问来查找当前的卖家，然后与所有卖家进行沟通，选择价格最低的卖家进行">
+<meta property="og:updated_time" content="2015-12-24T12:32:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Agent技术介绍">
+<meta name="twitter:description" content="最近因为课程的关系，开始接触到Agent技术，翻译过来就是智能体技术。这个概念其实是想要把计算机硬件相关的部分通过抽象隐藏起来，将各个计算资源抽象为所谓的智能体。Agent不仅仅只是具有各种行为特征，来完成各种任务。而且可以在不同的网络节点进行迁移，以完成所需要的需求。参考官方文档，做了一个售书系统的demo，其中，卖家通过向经理询问来查找当前的卖家，然后与所有卖家进行沟通，选择价格最低的卖家进行">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+  
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?c0a85e5c6298a0b712078cab3ed33463";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			<img src="https://avatars1.githubusercontent.com/u/1593014?v=3&amp;s=460">
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Wang Qisen</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">wangqisen&#39;s blog</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/Java">Java相关</a></li>
+				        
+							<li><a href="/categories/Lua">Lua相关</a></li>
+				        
+							<li><a href="/categories/Others">其他</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/wangqisen" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/2491416000" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.csdn.net/wangqisen" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/wang-qi-sen" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/JADE/" style="font-size: 10px;">JADE</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/test/" style="font-size: 10px;">test</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">Java,hust,nju.</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Wang Qisen</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="https://avatars1.githubusercontent.com/u/1593014?v=3&amp;s=460">
+				<hgroup>
+				  <h1 class="header-author">Wang Qisen</h1>
+				</hgroup>
+			</div>
+			
+			<p class="header-subtitle">wangqisen&#39;s blog</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/Java">Java相关</a></li>
+		        
+					<li><a href="/categories/Lua">Lua相关</a></li>
+		        
+					<li><a href="/categories/Others">其他</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/wangqisen" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/2491416000" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.csdn.net/wangqisen" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/wang-qi-sen" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Agent技术介绍" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/24/Agent技术介绍/" class="article-date">
+  	<time datetime="2015-12-24T12:00:17.000Z" itemprop="datePublished">2015-12-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Agent技术介绍
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Agent/">Agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JADE/">JADE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Agent-JADE/">Agent,JADE</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近因为课程的关系，开始接触到Agent技术，翻译过来就是智能体技术。这个概念其实是想要把计算机硬件相关的部分通过抽象隐藏起来，将各个计算资源抽象为所谓的智能体。Agent不仅仅只是具有各种行为特征，来完成各种任务。而且可以在不同的网络节点进行迁移，以完成所需要的需求。参考官方文档，做了一个售书系统的demo，其中，卖家通过向经理询问来查找当前的卖家，然后与所有卖家进行沟通，选择价格最低的卖家进行交易。</p>
+<h2 id="Agent运行环境和搭建过程">Agent运行环境和搭建过程</h2><p>Agent技术的实现方案有多种，其中一种叫做JADE。JADE本身提供了Agent智能体的运行环境和生命周期管理，行为特征，迁移等等各种特性，同时还提供了一个方便开发者的可视化界面。想要将JADE运行起来，就需要配置CLASSPATH，将JADE相关的几个jar包加入到CLASSPATH中，然后使用命令行就可以启动JADE了。<br>例如，如果是windows系统，在我的电脑的环境变量中，在CLASSPATH这一项添加所需的jar包就可以了。如果是linux系统，需要编辑配置文件/etc/profile:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/profile</span><br></pre></td></tr></table></figure></p>
+<p>在配置文件/etc/profile中添加CLASSPATH所需的所有jar包。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CLASSPATH=.:/libs/jade.jar:/libs/jadeTools.jar:/libs/iiop.jar:/libs/commons-codec-<span class="number">1.3</span>.jar:/libs/http.jar</span><br></pre></td></tr></table></figure></p>
+<p>然后，更新配置。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure></p>
+<p>最后，在命令行里启动就可以看到JADE启动了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java jade.Boot -gui</span><br></pre></td></tr></table></figure></p>
+<h2 id="售书系统的运行">售书系统的运行</h2><p>买家对应的Agent智能体是BookBuyerAgent,卖家对应的只能体是BookSellerAgent,经理则是BookManagerAgent。相关代码可以到github上查阅。</p>
+<p>在命令行里输入：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java jade.Boot -gui s1:BookSellerAgent s2:BookSellerAgent m:BookManagerAgent <span class="string">"b1:BookBuyerAgent(book_name)"</span></span><br></pre></td></tr></table></figure></p>
+<p>就可以启动这些智能体了。其中，买家需要提供一个购书的书名的参数。</p>
+<h2 id="一些观点">一些观点</h2><p>Agent技术其实是比较古老的一个概念了。应该说，非常适用于像并行计算这样的场景下应用。特别是其提供的迁移，旅行这样的功能和消息传递机制，都是进行并行计算非常恰当的一些特征。而象JADE这样的产品并没有得到广泛的推广使用，应该也是跟其思想过于繁杂，与Map/Reduce这样的热门计算框架比较起来，多了许多并不需要的东西，同时，也缺乏相关的监控，冗余，故障修复工具的支持，只能作为一个概念来进行参考。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/25/lua-programming/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          lua的遍历table过程中删除数组元素的问题
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Agent技术介绍" data-title="Agent技术介绍" data-url="http://yoursite.com/2015/12/24/Agent技术介绍/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"wangqisen"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Wang Qisen
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/mobile.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+<! -- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>lua的遍历table过程中删除数组元素的问题 | wangqisen&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="lua脚本中并为提供Jdk类库中迭代器这样的机制来供其在动态遍历table的过程中删除元素，因此，在删除的过程中可能会因此错误。例如以下程序：1local array=&amp;#123;1, 2, 3, 4, 5, 6&amp;#125;&amp;#10;for i, element in ipairs(array) do&amp;#10;&amp;#9;if i % 2 == 0 then&amp;#10;&amp;#9;&amp;#9;table.rem">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lua的遍历table过程中删除数组元素的问题">
+<meta property="og:url" content="http://yoursite.com/2016/02/25/lua-programming/index.html">
+<meta property="og:site_name" content="wangqisen's blog">
+<meta property="og:description" content="lua脚本中并为提供Jdk类库中迭代器这样的机制来供其在动态遍历table的过程中删除元素，因此，在删除的过程中可能会因此错误。例如以下程序：1local array=&amp;#123;1, 2, 3, 4, 5, 6&amp;#125;&amp;#10;for i, element in ipairs(array) do&amp;#10;&amp;#9;if i % 2 == 0 then&amp;#10;&amp;#9;&amp;#9;table.rem">
+<meta property="og:updated_time" content="2015-05-12T08:48:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lua的遍历table过程中删除数组元素的问题">
+<meta name="twitter:description" content="lua脚本中并为提供Jdk类库中迭代器这样的机制来供其在动态遍历table的过程中删除元素，因此，在删除的过程中可能会因此错误。例如以下程序：1local array=&amp;#123;1, 2, 3, 4, 5, 6&amp;#125;&amp;#10;for i, element in ipairs(array) do&amp;#10;&amp;#9;if i % 2 == 0 then&amp;#10;&amp;#9;&amp;#9;table.rem">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+  
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?c0a85e5c6298a0b712078cab3ed33463";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			<img src="https://avatars1.githubusercontent.com/u/1593014?v=3&amp;s=460">
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Wang Qisen</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">wangqisen&#39;s blog</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/Java">Java相关</a></li>
+				        
+							<li><a href="/categories/Lua">Lua相关</a></li>
+				        
+							<li><a href="/categories/Others">其他</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="http://github.com/wangqisen" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/2491416000" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.csdn.net/wangqisen" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/wang-qi-sen" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Agent/" style="font-size: 10px;">Agent</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/JADE/" style="font-size: 10px;">JADE</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/test/" style="font-size: 10px;">test</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">Java,hust,nju.</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Wang Qisen</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="https://avatars1.githubusercontent.com/u/1593014?v=3&amp;s=460">
+				<hgroup>
+				  <h1 class="header-author">Wang Qisen</h1>
+				</hgroup>
+			</div>
+			
+			<p class="header-subtitle">wangqisen&#39;s blog</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/Java">Java相关</a></li>
+		        
+					<li><a href="/categories/Lua">Lua相关</a></li>
+		        
+					<li><a href="/categories/Others">其他</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="http://github.com/wangqisen" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/2491416000" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.csdn.net/wangqisen" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="http://www.zhihu.com/people/wang-qi-sen" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-lua-programming" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/25/lua-programming/" class="article-date">
+  	<time datetime="2016-02-25T04:58:25.000Z" itemprop="datePublished">2016-02-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      lua的遍历table过程中删除数组元素的问题
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Lua/">Lua</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Lua/">Lua</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id=""> </h2><p>lua脚本中并为提供Jdk类库中迭代器这样的机制来供其在动态遍历table的过程中删除元素，因此，在删除的过程中可能会因此错误。<br>例如以下程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">local array=&#123;1, 2, 3, 4, 5, 6&#125;&#10;for i, element in ipairs(array) do&#10;&#9;if i % 2 == 0 then&#10;&#9;&#9;table.remove(array, i)&#10;&#9;end&#10;end</span><br></pre></td></tr></table></figure></p>
+<p>以上程序是为了删除数组中下标为偶数的元素，但是在删除过程中，lua会把删去元素后面的元素前移，数组的下标变了，也就使得以后遍历过程中的i并不准确。</p>
+<p>解决这个问题，有两个方法，第一个是从后向前删除元素，就像下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">local array=&#123;1, 2, 3, 4, 5, 6&#125;&#10;for i=#array,1,-1 do&#10;&#9;if i % 2 == 0 then&#10;&#9;&#9;table.remove(array, i)&#10;&#9;end&#10;end</span><br></pre></td></tr></table></figure>
+<p>这样尽管删除元素后面的数组元素的下标变了，但由于是由后向前删除，因此，并不影响前面的元素。这种做法在要求删除数组特定位置的元素时而不是顺序由后向前删除时就不适用了。</p>
+<p>第二个方法，是对于i来说，如果想要保持其遍历过程中的正确的索引位置，就需要在删除时位置不动，而不删除时正常的依次加一，这样就可以保证在数组删除导致的元素前移时其位置依然正确。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">local array=&#123;1,2,3,4,5,6&#125;&#10;local i=1&#10;while i&#60;=#array do&#10;&#9;if(i%2==0) then&#10;&#9;&#9;table.remove(array,i)&#10;&#9;else &#10;&#9;&#9;i=i+1&#10;&#9;end&#10;end</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/25/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/12/24/Agent技术介绍/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Agent技术介绍</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="lua-programming" data-title="lua的遍历table过程中删除数组元素的问题" data-url="http://yoursite.com/2016/02/25/lua-programming/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"wangqisen"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Wang Qisen
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/mobile.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+<! -- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+  </div>
+</body>
+</html>
